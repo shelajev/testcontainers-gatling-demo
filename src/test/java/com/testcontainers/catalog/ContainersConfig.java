@@ -22,7 +22,9 @@ public class ContainersConfig {
     @Bean
     @ServiceConnection
     PostgreSQLContainer<?> postgresContainer() {
-        PostgreSQLContainer<?> selfPostgreSQLContainer = new PostgreSQLContainer<>(parse("postgres:16-alpine"));
+        PostgreSQLContainer<?> selfPostgreSQLContainer =
+                new PostgreSQLContainer<>(parse("postgres:16-alpine"));
+
 
         return selfPostgreSQLContainer;
     }
