@@ -1,5 +1,6 @@
 package com.testcontainers;
 
+import com.github.dockerjava.api.model.HostConfig;
 import com.testcontainers.fun.awaitility.CloudflaredContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
@@ -50,7 +51,14 @@ public class TestMain {
                 .withEnv("SPRING_CLOUD_AWS_ENDPOINT", "localstack:4566")
 
                 .withNetwork(network)
-                .waitingFor(Wait.forHttp("/actuator/health"));
+                .waitingFor(Wait.forHttp("/actuator/health"))
+                .withCreateContainerCmdModifier(createContainerCmd -> {
+                            var hostConfig = new HostConfig();
+                            hostConfig.withMemory(1 * 1024L * 1024L);
+                            hostConfig.withCpuCount(1L);
+                            createContainerCmd.withHostConfig(hostConfig);
+                        }
+                );
 
         Startables.deepStart(postgres, kafka, localStack).join();
 
